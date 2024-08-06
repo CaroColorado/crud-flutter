@@ -7,14 +7,15 @@ import 'dart:convert';
 
 
 //obtener todos los productos
-Future<void> getData() async {
+Future<List<Product>> getData() async {
   final response = await http.get(Uri.parse(url));
   
   if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
+    final List<dynamic> data = jsonDecode(response.body);
+    return data.map((item) => Product.fromJson(item)).toList();
     print(data);
   } else {
-    print("Failed to load data");
+    throw Exception("Failed to load data");
   }
 }
 

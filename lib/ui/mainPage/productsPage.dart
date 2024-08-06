@@ -1,24 +1,18 @@
 import 'package:crud/data/models/Product.dart';
+import 'package:crud/data/source/product_controller.dart';
 import 'package:crud/ui/footer.dart';
 import 'package:flutter/material.dart';
 
-class Productspage extends StatelessWidget {
+class Productspage extends StatefulWidget {
   const Productspage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Ejemplo de lista de productos
-    final List<Product> products = [
-      Product(name: 'Producto 1', price: 100, description: 'Descripción 1'),
-      Product(name: 'Producto 2', price: 200, description: 'Descripción 2'),
-      Product(name: 'Producto 2', price: 200, description: 'Descripción 2'),
-      Product(name: 'Producto 2', price: 200, description: 'Descripción 2'),
-      Product(name: 'Producto 2', price: 200, description: 'Descripción 2'),
-      Product(name: 'Producto 2', price: 200, description: 'Descripción 2'),
-      Product(name: 'Producto 2', price: 200, description: 'Descripción 2'),
-      // Agrega más productos aquí
-    ];
+  State<Productspage> createState() => _ProductspageState();
+}
 
+class _ProductspageState extends State<Productspage> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue,
       body: Column(
@@ -41,36 +35,52 @@ class Productspage extends StatelessWidget {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  child: ListView.builder(
-                    itemCount: products.length,
-                    itemBuilder: (context, index) {
-                      final product = products[index];
-                
-                      return Card(
-                        margin: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          title: Text(product.name),
-                          subtitle:
-                              Text('${product.price} - ${product.description}'),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.edit),
-                                onPressed: () {},
+                padding: const EdgeInsets.all(12.0),
+                child: FutureBuilder<List<Product>>(
+                  future: getData(), // Obtiene los datos aquí
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(
+                          child: Text('No hay productos disponibles.'));
+                    } else {
+                      final products = snapshot.data!;
+                      return ListView.builder(
+                        itemCount: products.length,
+                        itemBuilder: (context, index) {
+                          final product = products[index];
+                          return Card(
+                            margin: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              title: Text(product.name),
+                              subtitle: Text(
+                                  '${product.price} - ${product.description}'),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.edit),
+                                    onPressed: () {},
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () {
+                                      setState(() {
+                                        deleteData(product.id);
+                                      });
+                                    },
+                                  ),
+                                ],
                               ),
-                              IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
-                        ),
+                            ),
+                          );
+                        },
                       );
-                    },
-                  ),
+                    }
+                  },
                 ),
               ),
             ),

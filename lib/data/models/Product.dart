@@ -21,4 +21,14 @@ class Product {
       'price': price,
     };
   }
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      price: json['price'].toDouble(),
+    );
+  }
+
 }
