@@ -63,13 +63,16 @@ class _ProductspageState extends State<Productspage> {
                                 children: [
                                   IconButton(
                                     icon: Icon(Icons.edit),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      _showEditDialog(product);
+                                    },
                                   ),
                                   IconButton(
                                     icon: Icon(Icons.delete),
-                                    onPressed: () {
+                                    onPressed: () async {
+                                      await deleteData(product.id);
                                       setState(() {
-                                        deleteData(product.id);
+                                        
                                       });
                                     },
                                   ),
@@ -88,6 +91,64 @@ class _ProductspageState extends State<Productspage> {
         ],
       ),
       bottomNavigationBar: footer(),
+    );
+  }
+
+  Future<void> _showEditDialog(Product product) async {
+    final nameController = TextEditingController(text: product.name);
+    final priceController =
+        TextEditingController(text: product.price.toString());
+    final descriptionController =
+        TextEditingController(text: product.description);
+
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Editar Producto'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(labelText: 'Nombre'),
+                ),
+                TextField(
+                  controller: priceController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(labelText: 'Precio'),
+                ),
+                TextField(
+                  controller: descriptionController,
+                  decoration: InputDecoration(labelText: 'Descripción'),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Guardar'),
+              onPressed: () async {
+                final updatedProduct = Product(
+                  id: product.id,
+                  name: nameController.text,
+                  price: double.tryParse(priceController.text) ?? 0.0,
+                  description: descriptionController.text,
+                );
+                await editData(product.id, updatedProduct);
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -2,13 +2,14 @@
 import 'package:crud/data/models/Product.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-  String url = "http://127.0.0.1:3000/api/v1/products";
-
+//String url = "http://127.0.0.1:3000/api/v1/products";
+final url = dotenv.env['API_URL'];
 
 //obtener todos los productos
 Future<List<Product>> getData() async {
-  final response = await http.get(Uri.parse(url));
+  final response = await http.get(Uri.parse(url!));
   
   if (response.statusCode == 200) {
     final List<dynamic> data = jsonDecode(response.body);
@@ -22,7 +23,7 @@ Future<List<Product>> getData() async {
   //agregar un producto
 Future<int> addData(Product newProduct) async {
   final response = await http.post(
-    Uri.parse(url),
+    Uri.parse(url!),
     headers: <String, String>{
       'Content-Type' : 'application/json',
     },

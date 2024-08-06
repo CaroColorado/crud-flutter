@@ -1,4 +1,3 @@
-import 'dart:js_interop';
 
 import 'package:crud/data/models/Product.dart';
 import 'package:crud/data/source/product_controller.dart';
