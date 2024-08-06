@@ -1,5 +1,5 @@
 # CRUD-FLUTTER
-  - clonar repositorio
-  - ejecutar flutter pub get para intalar dependencias
-  - asegurarce que el backend se este ejecutando, [Repositorio Crud backend](https://github.com/CaroColorado/crud-nodejs)
-  - ejecutar flutter run para ejecutar proyecto, seleccionar como equipo Windows
+  - Clonar repositorio
+  - Ejecutar flutter pub get para instalar dependencias
+  - asegurarse de que el backend esté ejecutándose, [Repositorio Crud backend](https://github.com/CaroColorado/crud-nodejs)
+  - Ejecutar flutter run para iniciar proyecto y seleccionar como equipo Windows
